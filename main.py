@@ -1,5 +1,7 @@
 from py_module.config import Configuration
 from py_module.data_preprocessing import PHMDataset, LoadAndPreprocessingPHMDatasets
+from py_module.data_training import DataTraining
+from py_module.data_evaluation import DataEvaluation
 
 import os
 from torch.utils.data import Dataset, DataLoader
@@ -7,7 +9,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
 
-class EngineCycleTraining(object):
+class PHMProcedures(object):
 
     """
     Main Flow:
@@ -15,8 +17,10 @@ class EngineCycleTraining(object):
 
     def __init__(self):
         self.preprocess = LoadAndPreprocessingPHMDatasets()
+        self.training = DataTraining()
+        self.evaluation = DataEvaluation()
 
-    def phm_2008_data_training(self):
+    def phm_2008_data_case(self):
         data, unique_units = self.preprocess.read_phm_data(data_string="PHM_2008")
 
         train_units, test_units = train_test_split(unique_units, test_size=0.2, random_state=42)
@@ -33,21 +37,18 @@ class EngineCycleTraining(object):
         train_dataset = PHMDataset(X_train_scaled, y_train)
         test_dataset = PHMDataset(X_test_scaled, y_test)
 
-        train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-        test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
+        model = self.training.phm_2008_data_training(train_dataset)
 
-        ### 測試DataLoader功能
-        # for inputs, labels in test_loader:
-        #     print(inputs, labels)
-        #     break
+        self.evaluation.phm_2008_data_evaluation(model, test_dataset)
+
 
         
 
 
 def main_flow():
     
-    main_obj = EngineCycleTraining()
-    main_obj.phm_2008_data_training()
+    main_obj = PHMProcedures()
+    main_obj.phm_2008_data_case()
 
 
 if __name__ == "__main__":
