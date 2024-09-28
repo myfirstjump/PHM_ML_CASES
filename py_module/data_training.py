@@ -47,5 +47,13 @@ class DataTraining(object):
         xgb_model = xgb.XGBRegressor()
         xgb_model.fit(X_train, y_train)
 
-        return xgb_model
+        features = self.config.features_name_2008_phm[:-2]
+        features.remove('unit')
+        features.remove('cycle')
+        importances = xgb_model.feature_importances_
+        importances_df = pd.DataFrame({'features':features, 'importance':importances})
+        print("Feature importances:\n", importances_df)
+
+
+        return ('xgb_model', xgb_model)
 

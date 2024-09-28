@@ -29,6 +29,8 @@ class PHMProcedures(object):
 
         y_train = self.preprocess.phm_2008_labels_define(X_train)
         y_test = self.preprocess.phm_2008_labels_define(X_test)
+        X_train = X_train.drop(labels=['cycle', 'unit'], axis='columns')
+        X_test = X_test.drop(labels=['cycle', 'unit'], axis='columns')
 
         scaler = StandardScaler()
         X_train_scaled = scaler.fit_transform(X_train)
@@ -37,9 +39,9 @@ class PHMProcedures(object):
         train_dataset = PHMDataset(X_train_scaled, y_train)
         test_dataset = PHMDataset(X_test_scaled, y_test)
 
-        model = self.training.phm_2008_data_training(train_dataset)
+        model_name, model = self.training.phm_2008_data_training(train_dataset)
 
-        self.evaluation.phm_2008_data_evaluation(model, test_dataset)
+        self.evaluation.phm_2008_data_evaluation(test_dataset, (model_name, model))
 
 
         

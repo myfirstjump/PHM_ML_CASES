@@ -18,7 +18,8 @@ class DataEvaluation(object):
         self.plotting_obj = PlotDesign()
 
 
-    def phm_2008_data_evaluation(self, model, test_dataset):
+    def phm_2008_data_evaluation(self, test_dataset, model_tuple):
+        model_name, model = model_tuple
 
         test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
 
@@ -33,8 +34,8 @@ class DataEvaluation(object):
         # 計算評估指標（均方誤差和 R² 分數）
         mse = mean_squared_error(y_test, predictions)
         r2 = r2_score(y_test, predictions)
-        print(f"XGBoost Mean Squared Error: {mse:.4f}")
-        print(f"XGBoost R² Score: {r2:.4f}")
+        print(f"{model_name} Mean Squared Error: {mse:.4f}")
+        print(f"{model_name} R² Score: {r2:.4f}")
 
 
         # 作圖
